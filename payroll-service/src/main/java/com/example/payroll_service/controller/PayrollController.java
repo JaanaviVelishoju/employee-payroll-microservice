@@ -4,21 +4,23 @@ package com.example.payroll_service.controller;
 import com.example.payroll_service.entity.Payroll;
 import com.example.payroll_service.service.PayrollService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Year;
+import java.time.YearMonth;
 
 @RestController
+@RequestMapping("/payroll")
 public class PayrollController {
 
     @Autowired
     PayrollService service;
 
-    @PostMapping("/payroll/{empid}")
-    public Payroll generate(@PathVariable Long empId , @RequestParam String month)
+    @PostMapping("/{id}")
+    public ResponseEntity<Payroll> generate(@PathVariable Long id , @RequestParam String month)
     {
-        return service.generate(empId,month);
+        return ResponseEntity.ok(service.generate(id, YearMonth.parse(month)));
     }
 
 }

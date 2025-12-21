@@ -1,15 +1,30 @@
 package com.example.payroll_service.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+import java.time.YearMonth;
+
+
 @Entity
+@Table(name="payroll" , uniqueConstraints = {@UniqueConstraint(columnNames = {"employeeId","payrollMonth"})})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Payroll {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long employeeID;
+    @Column(name="employee_id" ,nullable= false)
+    private Long employeeId;
+
+    @Column(nullable = false)
     private Double monthlySalary;
-    private String month;
+
+    @Column(name="payroll_month", nullable = false )
+    private YearMonth payrollMonth;
 }

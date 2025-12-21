@@ -7,6 +7,8 @@ import com.example.payroll_service.repository.PayrollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.YearMonth;
+
 @Service
 public class PayrollService {
 
@@ -16,13 +18,17 @@ public class PayrollService {
     @Autowired
     EmployeeClient employeeClient;
 
-    public Payroll generate(Long empId ,String month){
-       EmployeeDTO emp = employeeClient.getEmployee(empId);
+    public Payroll generate(Long id , YearMonth month){
+
+        if(repo.existsByEmployeeIdAndPayrollMonth(id,month)){
+            throw new RuntimeException("Payroll already generated fro employee "+id +" for month " +month);
+        }
+       EmployeeDTO emp = employeeClient.getEmployee(id);
 
        Payroll payroll=new Payroll();
-       payroll.setEmployeeID(empId);
+       payroll.setEmployeeId(id);
        payroll.setMonthlySalary(emp.salary());
-       payroll.setMonth(month);
+       payroll.setPayrollMonth(month);
        return repo.save(payroll);
     }
 }
